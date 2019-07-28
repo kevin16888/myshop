@@ -65,39 +65,49 @@ export default {
       let res = await request(path)
       return res.data.message
     },
-    async swiperData () {
-      // 请求后台接口获取轮播图数据
-      // let that = this
-      // mpvue.request({
-      //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/swiperdata',
-      //   success: function (res) {
-      //     // console.log(res)
-      //     let {message} = res.data
-      //     that.swiper = message
-      //   }
-      // })
-      // let res = await request('home/swiperdata')
-      // this.swiper = res.data.message
+    // async swiperData() {
+    //   // 请求后台接口获取轮播图数据
+    //   // let that = this
+    //   // mpvue.request({
+    //   //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/swiperdata',
+    //   //   success: function (res) {
+    //   //     // console.log(res)
+    //   //     let {message} = res.data
+    //   //     that.swiper = message
+    //   //   }
+    //   // })
+    //   // let res = await request('home/swiperdata')
+    //   // this.swiper = res.data.message
+    //   this.swiper = await this.queryData('home/swiperdata')
+    // },
+    // async menuData() {
+    //   // 请求后台接口获取首页分类选项数据
+    //   // let that = this
+    //   // mpvue.request({
+    //   //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/catitems',
+    //   //   success: function (res) {
+    //   //     console.log(res)
+    //   //     let {message} = res.data
+    //   //     that.menu = message
+    //   //   }
+    //   // })
+    //   // let res = await request('home/catitems')
+    //   // this.menu = res.data.message
+    //   this.menu = await this.queryData('home/catitems')
+    // },
+    // async floorData() {
+    //   // 楼层数据
+    //   this.floor = await this.queryData('home/floordata')
+    // },
+    async initData () {
       this.swiper = await this.queryData('home/swiperdata')
-    },
-    async menuData () {
-      // 请求后台接口获取首页分类选项数据
-      // let that = this
-      // mpvue.request({
-      //   url: 'https://www.zhengzhicheng.cn/api/public/v1/home/catitems',
-      //   success: function (res) {
-      //     console.log(res)
-      //     let {message} = res.data
-      //     that.menu = message
-      //   }
-      // })
-      // let res = await request('home/catitems')
-      // this.menu = res.data.message
       this.menu = await this.queryData('home/catitems')
-    },
-    async floorData () {
-      // 楼层数据
       this.floor = await this.queryData('home/floordata')
+    },
+    onPullDownRefresh () {
+      // 下拉刷新，重新加载页面数据
+      // console.log(123)
+      this.initData()
     },
     toTopHandle () {
       // 控制之回到顶部
@@ -107,9 +117,10 @@ export default {
     }
   },
   mounted () {
-    this.swiperData()
-    this.menuData()
-    this.floorData()
+    // this.swiperData()
+    // this.menuData()
+    // this.floorData()
+    this.initData()
   },
   onPageScroll (e) {
     // 小程序生命周期函数，监控页面的滚动
