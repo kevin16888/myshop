@@ -10,7 +10,7 @@
     <!-- 轮播图 -->
     <swiper indicator-dots="true">
       <swiper-item :key="item.goods_id" v-for="item in swiper">
-        <image :src="item.image_src" class="slide-image"/>
+        <image :src="item.image_src" class="slide-image" />
       </swiper-item>
     </swiper>
     <!-- 菜单 -->
@@ -40,6 +40,11 @@
         </div>
       </div>
     </div>
+    <!-- 回到顶部按钮 -->
+    <div class="toTop" v-if="isShow" @click="toTopHandle">
+      ︿
+      <p>顶部</p>
+    </div>
   </div>
 </template>
 
@@ -50,7 +55,8 @@ export default {
     return {
       swiper: [],
       menu: [],
-      floor: []
+      floor: [],
+      isShow: false
     }
   },
   methods: {
@@ -92,12 +98,24 @@ export default {
     async floorData () {
       // 楼层数据
       this.floor = await this.queryData('home/floordata')
+    },
+    toTopHandle () {
+      // 控制之回到顶部
+      mpvue.pageScrollTo({
+        scrollTop: 0
+      })
     }
   },
   mounted () {
     this.swiperData()
     this.menuData()
     this.floorData()
+  },
+  onPageScroll (e) {
+    // 小程序生命周期函数，监控页面的滚动
+    // 如果滚动指定大小，那么久控制显示或隐藏
+    // console.log(e.scrollTop)
+    this.isShow = e.scrollTop > 50
   }
 }
 </script>
@@ -156,5 +174,21 @@ export default {
   width: 232rpx;
   height: 188rpx;
   border-radius: 4px;
+}
+.toTop {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  position: fixed;
+  right: 40rpx;
+  bottom: 40rpx;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.toTop p {
+  font-size: 14px;
 }
 </style>
