@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 搜索条 -->
-    <div class="search-bar">
-      <div class="search-input">
-        <!-- <icon type='serach' color='#999'/> -->
-        <input placeholder="搜索">
-      </div>
-    </div>
+    <search-bar></search-bar>
     <!-- 轮播图 -->
     <swiper indicator-dots="true">
       <swiper-item :key="item.goods_id" v-for="item in swiper">
@@ -50,6 +45,7 @@
 
 <script>
 import request from '../../utils/request.js'
+import SearchBar from '../../components/searchbar'
 export default {
   data () {
     return {
@@ -58,6 +54,9 @@ export default {
       floor: [],
       isShow: false
     }
+  },
+  components: {
+    'search-bar': SearchBar
   },
   methods: {
     async queryData (path) {
