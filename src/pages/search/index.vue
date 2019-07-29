@@ -30,9 +30,9 @@
       <icon @click="clearHistory" type="clear" size="16"/>
     </div>
     <div class="history-list">
-      <navigator :url='getUrl'>
-        <div :key="index" v-for="(item,index) in keywordHistory" class="history-item">{{item}}</div>
-      </navigator>
+      <div :key="index" v-for="(item,index) in keywordHistory" class="history-item">
+        <navigator :url="getUrl">{{item}}</navigator>
+      </div>
     </div>
   </div>
 </template>
