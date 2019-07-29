@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="right">
-        <div :key="item.cat_id" v-for="item in rightData" class="brand-item">
+        <div :key="item.cat_id" v-for="item in getRightData" class="brand-item">
           <div class="brand-title">{{item.cat_name}}</div>
           <div class="brand-list">
             <div :key="i" v-for="(img,i) in item.children" class="brand">
@@ -31,12 +31,21 @@ export default {
   data () {
     return {
       cate: [],
-      currentIndex: 0,
-      rightData: []
+      currentIndex: 0
+      // rightData: []
     }
   },
   components: {
     'search-bar': SearchBar
+  },
+  computed: {
+    getRightData () {
+      // 从cate数组中获取一部分数据，根据当前索引得到的
+      // 计算属性应用场景：从既有数据中获取几部分数据或者对已有数据加工处理形成新的格式
+      // 计算属性的结果依赖于data中数据的变化
+      let ret = this.cate.length > 0 && this.cate[this.currentIndex].children
+      return ret
+    }
   },
   methods: {
     async cateData () {
@@ -49,13 +58,13 @@ export default {
       // 切换右侧商标
       // console.log(index)
       this.currentIndex = index
-      this.rightData = this.cate[this.currentIndex].children
+      // this.rightData = this.cate[this.currentIndex].children
     }
   },
-  async mounted () {
-    await this.cateData()
+  mounted () {
+    this.cateData()
     // 从全部分类数据中根据当前索引取出对应的右侧数据
-    this.rightData = this.cate[this.currentIndex].children
+    // this.rightData = this.cate[this.currentIndex].children
     // console.log(this.rightData)
   }
 }
