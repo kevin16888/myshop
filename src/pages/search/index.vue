@@ -31,7 +31,9 @@
     </div>
     <div class="history-list">
       <div :key="index" v-for="(item,index) in keywordHistory" class="history-item">
-        <navigator :url="getUrl">{{item}}</navigator>
+        <navigator :url="'/pages/search_list/main?query=' + item">
+          {{item}}
+        </navigator>
       </div>
     </div>
   </div>
@@ -49,12 +51,11 @@ export default {
       keywordHistory: mpvue.getStorageSync('keyword') || []
     }
   },
-  computed: {
-    getUrl () {
-      return '/pages/search_list/main?query=' + this.keyword
-    }
-  },
   methods: {
+    getUrl (kw) {
+      // console.log(kw);
+      return '/pages/search_list/main?query=' + kw
+    },
     clearHistory () {
       // 清空搜索关键字的历史信息
       // 清空的是本地存储的数据，并不会影响data中的数据
