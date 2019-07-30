@@ -18,17 +18,34 @@
         class="tab-item"
       >{{item}}</div>
     </div>
+    <!-- 商品的列表 -->
+    <div class="goods-list">
+      <navigator class="goods-item" :key="index" v-for="(item,index) in list">
+        <img :src="item.goods_small_logo" mode="aspectFill">
+        <div class="goods-right">
+          <h4>{{item.goods_name}}</h4>
+          <div class="price">
+            <span>￥</span>
+            {{item.goods_price}}
+          </div>
+        </div>
+      </navigator>
+    </div>
   </div>
 </template>
 
 <script>
 import SearchBar from '../../components/searchbar'
+import request from '../../utils/request.js'
 export default {
   data () {
     return {
       keyword: '',
       tabNames: ['综合', '销量', '价格'],
-      currentIndex: 0
+      currentIndex: 0,
+      list: [],
+      pagenum: 1,
+      total: 0
     }
   },
   methods: {
@@ -40,11 +57,20 @@ export default {
   components: {
     'search-bar': SearchBar
   },
-  onLoad (param) {
+  async onLoad (param) {
     // 小程序的生命周期函数
     console.log(param)
     // 参数query表示路径传递过来的参数
     this.keyword = param.query
+    // 调用后台接口获取数据
+    let res = await request('goods/search', 'get', {
+      query: param.query
+    })
+    console.log(res)
+    let { message } = res.data
+    this.list = message.goods
+    this.pagenum = message.pagenum
+    this.total = message.total
   }
 }
 </script>
