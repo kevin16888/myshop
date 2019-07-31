@@ -209,7 +209,9 @@ export default {
       this.products = products
     }
   },
-  onLoad () {
+  onShow () {
+    // 由于要触发多次(从后台显示该页面的时候就触发一次)，所以用onshow
+    // 不能用onload，因为onload在页面加载时候只触发一次
     // 从本地存储中获取购物车商品信息
     this.getCartData()
     // 页面加载成功后，从本地存储中获取地址信息
