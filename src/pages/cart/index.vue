@@ -72,7 +72,7 @@
         <div class="price-tips">包含运费</div>
       </div>
       <!-- 右侧结算按钮 -->
-      <div class="accounts">结算</div>
+      <div @click="toPay" class="accounts">结算</div>
     </div>
   </div>
 </template>
@@ -102,6 +102,18 @@ export default {
     }
   },
   methods: {
+    toPay () {
+      // 去付款必须先登录，故而需要微信用户进行授权
+      // 所以要跳转到一个页面，该页面让用户去点击按钮进行授权从而才能登录
+      let token = mpvue.getStorageSync('mytoken')
+      console.log(token)
+      if (token) {
+        return
+      }
+      mpvue.navigateTo({
+        url: '/pages/auth/main'
+      })
+    },
     subHandle (id) {
       // 商品数量减一
       // console.log('-' + id);
