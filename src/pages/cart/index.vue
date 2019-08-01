@@ -142,7 +142,7 @@ export default {
         // 用户没有选中商品，给一个提示并且终止提交订单
         mpvue.showToast({
           title: '请选择商品',
-          icon: 'success',
+          icon: 'none',
           duration: 2000
         })
         return
