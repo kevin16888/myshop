@@ -157,13 +157,17 @@ export default {
         let { message } = res.data
         let orderNumber = message.order_number
         console.log(orderNumber)
+        // 把生成的订单号作为参数传递到下一个页面：即订单确认页面
+        mpvue.navigateTo({
+          url: '/pages/order/main?order_num' + orderNumber
+        })
       })
-      // if (token) {
-      //   return
-      // }
-      // mpvue.navigateTo({
-      //   url: '/pages/auth/main'
-      // })
+      // 如果没有登录，就跳转到授权页面
+      if (!token) {
+        mpvue.navigateTo({
+          url: '/pages/auth/main'
+        })
+      }
     },
     subHandle (id) {
       // 商品数量减一
