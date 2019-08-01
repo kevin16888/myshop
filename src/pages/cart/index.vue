@@ -102,6 +102,15 @@ export default {
     }
   },
   methods: {
+    updateStorage () {
+      // 解决BUG：把修改后的商品数量再次同步到本地存储中
+      // 把数组重新转化为键值对存储到本地存储中：[goods_id:商品对象信息]
+      let p = {}
+      this.products.forEach(item => {
+        p[item.goods_id] = item
+      })
+      mpvue.setStorageSync('mycart', p)
+    },
     toPay () {
       // 去付款必须先登录，故而需要微信用户进行授权
       // 所以要跳转到一个页面，该页面让用户去点击按钮进行授权从而才能登录
@@ -140,6 +149,7 @@ export default {
         products.splice(currentIndex, 1)
       }
       this.products = products
+      this.updateStorage()
     },
     addHandle (id) {
       // 商品数量加一：根据id查询出products中对应商品的信息，然后修改对应num的数量
@@ -154,6 +164,7 @@ export default {
         }
       })
       this.products = products
+      this.updateStorage()
     },
     selectAll () {
       // 实现所有商品的全部选中或者全部取消
