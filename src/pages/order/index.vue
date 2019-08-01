@@ -85,6 +85,7 @@ export default {
     // 在mpvue的插值表达式中，不可以直接使用函数调用
     payHandle () {
       // 完成支付动作
+      let that = this
       let token = mpvue.getStorageSync('mytoken')
       request(
         'my/orders/req_unifiedorder',
@@ -96,11 +97,27 @@ export default {
       ).then(res => {
         // 这里返回的结果用于进行微信支付
         // console.log(res)
-        let {message} = res.data
+        let { message } = res.data
         wx.requestPayment({
           // 把pay对象中所有属性拆开放到这个位置
           ...message.pay,
           success (res) {
+            // 清空已经支付的商品信息
+            // 获取所有选中的商品并且全部删除
+            let indexs = []
+            for (let key in that.cart) {
+              let p = that.cart[key]
+              if (p.checked) {
+                // 选中的商品
+                indexs.push(p.goods_id)
+              }
+            }
+            indexs.forEach(item => {
+              // item就是商品id，根据商品id删除对象中的属性和值
+              delete that.cart[item]
+            })
+            // 然后同步购物车最新数据
+            mpvue.setStorageSync('mycart', that.cart)
             // 成功之后，跳回到购物车，还应清空已经支付的商品信息
             mpvue.navigateBack({
               delta: 1
