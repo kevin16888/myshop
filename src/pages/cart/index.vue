@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import request from '../../utils/request.js'
 export default {
   data () {
     return {
@@ -88,6 +89,35 @@ export default {
   },
   computed: {
     allPrice () {
+      // 计算属性的好处，支持缓存
+      return this.calcTotalPrice()
+    },
+    detailAddress () {
+      return this.joinAddress()
+    }
+  },
+  methods: {
+    orderGoods () {
+      // 生成要提交的订单的商品列表：即选中的所有商品
+      let selectProducts = []
+      this.products.forEach(item => {
+        if (item.checked) {
+          // 选中的商品
+          selectProducts.push({
+            goods_id: item.goods_id,
+            goods_number: item.num,
+            goods_price: item.goods_price
+          })
+        }
+      })
+      return selectProducts
+    },
+    joinAddress () {
+      // 拼接一个完成的地址
+      let { provinceName, cityName, countyName, detailInfo } = this.address
+      return `${provinceName}${cityName}${countyName}${detailInfo}`
+    },
+    calcTotalPrice () {
       // 计算商品的总价：单价*数量，再累加
       let sum = 0
       // 计算总价
@@ -96,12 +126,6 @@ export default {
       })
       return sum
     },
-    detailAddress () {
-      let { provinceName, cityName, countyName, detailInfo } = this.address
-      return `${provinceName}${cityName}${countyName}${detailInfo}`
-    }
-  },
-  methods: {
     updateStorage () {
       // 解决BUG：把修改后的商品数量再次同步到本地存储中
       // 把数组重新转化为键值对存储到本地存储中：[goods_id:商品对象信息]
@@ -115,13 +139,31 @@ export default {
       // 去付款必须先登录，故而需要微信用户进行授权
       // 所以要跳转到一个页面，该页面让用户去点击按钮进行授权从而才能登录
       let token = mpvue.getStorageSync('mytoken')
-      console.log(token)
-      if (token) {
-        return
+      // console.log(token)
+      // 如果这里获取到了token，则下一步就进入订单确认页面
+      // 进入订单确认页面后，就可以进行支付了
+      // 用户授权并且登录微信平台后进行创建订单的操作
+      let param = {
+        // 商品总价
+        order_price: this.calcTotalPrice(),
+        // 收货地址
+        consignee_addr: this.joinAddress(),
+        // 购买的商品清单
+        goods: this.orderGoods()
       }
-      mpvue.navigateTo({
-        url: '/pages/auth/main'
+      request('orders/create', 'post', param, {
+        Authorization: token
+      }).then(res => {
+        let { message } = res.data
+        let orderNumber = message.order_number
+        console.log(orderNumber)
       })
+      // if (token) {
+      //   return
+      // }
+      // mpvue.navigateTo({
+      //   url: '/pages/auth/main'
+      // })
     },
     subHandle (id) {
       // 商品数量减一
