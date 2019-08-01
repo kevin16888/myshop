@@ -206,7 +206,7 @@ export default {
         products.splice(currentIndex, 1)
       }
       this.products = products
-      this.updateStorage()
+      // this.updateStorage()
     },
     addHandle (id) {
       // 商品数量加一：根据id查询出products中对应商品的信息，然后修改对应num的数量
@@ -221,7 +221,7 @@ export default {
         }
       })
       this.products = products
-      this.updateStorage()
+      // this.updateStorage()
     },
     selectAll () {
       // 实现所有商品的全部选中或者全部取消
@@ -284,6 +284,10 @@ export default {
     this.getCartData()
     // 页面加载成功后，从本地存储中获取地址信息
     this.address = mpvue.getStorageSync('myAddress')
+  },
+  onHide () {
+    // 把商品相关信息同步到本地存储中
+    this.updateStorage()
   }
 }
 </script>
